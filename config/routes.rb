@@ -3,11 +3,12 @@ RailsApi::Application.routes.draw do
 
   namespace :api do
     resources :dogs, :only => [:index]
-  
 
-    # namespace :v1 do
-    #   resources :dogs
-    # end
+    namespace :v1 do
+      resources :dogs, :only => [:index]
+      resources :boxer_dogs, :only => [:index]
+    end
+
     # namespace :v2 do
       
     # end
