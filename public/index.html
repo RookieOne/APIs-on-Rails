@@ -24,7 +24,11 @@
     <link rel="stylesheet" href="css/custom.css">
     <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
 
-    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <link rel="stylesheet" href="lib/css/tomorrow.css">
+
+<link href="lib/prettify_css/sons-of-obsidian.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="lib/prettify/prettify.js"></script>
+
   </head>
   
   <body>
@@ -72,7 +76,7 @@
           <section>
             <h2>We will talk about...</h2> 
             <ol class="my-list">
-              <li class="fragment">Routes</li>
+              <li class="fragment">Routes & HTTP</li>
               <li class="fragment">Versioning</li>
               <li class="fragment">JSON Serialization</li>
               <li class="fragment">JSON Format</li>
@@ -124,24 +128,60 @@
           </section>  
         </section>
 
-        <section class="center-slide">
-          <h2>Time to share what I learned</h2>          
-        </section>
+<!-- Talk For -->
+<section>
+<section class="center-slide">
+  <h2>Who is this talk for?</h2>          
+</section>
+<section class="center-slide">
+  <h2>Newbies</h2>          
+  <p>New to web or new to building APIs with Rails.</p>
+</section>
+<section class="center-slide">
+  <h2>Experienced Devs</h2>          
+  <p>I learned a few things working on this talk, maybe you will too.</p>
+</section>
+<section class="center-slide">
+  <h2>Experts?</h2>          
+  <p>Maybe I will share something you didn't know.</p>
+</section>
+</section>
 
-        <section>
-          <h1>Routes</h1>
-          <p>They are important</p>          
-        </section>
+<section class="center-slide">
+  <h1>Let's start!</h1>
+</section>
 
-        <section>
-          <section>
-            <h2>RESTful resources</h2>
-            <small>quick review</small>
+<section class="center-slide">
+  <h1>Routes & HTTP</h1>
+  <p>It's important</p>
+</section>
 
-<pre><code>
+<section>
+<section>
+  <h2>HTTP Verbs</h2>
+  <p>Simply...</p>
+  <p class="subsection"><code>GET</code>  - read</p>
+  <p class="subsection"><code>POST</code> - write</p>
+  <p class="subsection">It is more complicated than that, but...</p>
+</section>
+<section data-state="alert">
+  <h2>When you get that wrong</h2>
+  <p>You look terrible and it pisses experience API users off immensely</p>
+<pre class="prettyprint">// to login
+GET "http://wtf.com/api/login"
+</pre>
+<pre class="prettyprint">// to read a list of foobars
+POST "http://wtf.com/api/foobars"
+</pre>
+</section>
+<section>
+<h2>RESTful resources</h2>
+<p>quick review</p>
+
+<pre class="prettyprint">
 resources :dogs
-</pre></code>
-<pre><code>
+</pre>
+<pre class="prettyprint">
    dogs GET    /dogs(.:format)                 dogs#index
         POST   /dogs(.:format)                 dogs#create
 new_dog GET    /dogs/new(.:format)             dogs#new
@@ -149,121 +189,151 @@ edit_dog GET    /dogs/:id/edit(.:format)        dogs#edit
     dog GET    /dogs/:id(.:format)             dogs#show
         PUT    /dogs/:id(.:format)             dogs#update
         DELETE /dogs/:id(.:format)             dogs#destroy  
-</pre></code>
-          </section>
-          <section>
-            <h2>respond_to</h2>     
-<pre><code>
-  def index
-    @dogs = Dog.all
-    
-    respond_to do |format|
-      format.html
-      format.json { render :json => @dogs }
-    end
+</pre>
+</section>
+</section>
+
+<section>
+<section>
+  <h2>HTTP Status Codes</h2>
+  <p>They are important</p>
+  <ol class="my-list">
+    <li>200: OK</li>
+    <li>401: Unauthorized</li>
+    <li>403: Forbidden</li>
+    <li>many more...</li>
+  </ol>  
+</section>
+</section>
+
+<section>
+
+<section>
+<h2>respond_to</h2>    
+<pre class="prettyprint">def index
+  @dogs = Dog.all
+  
+  respond_to do |format|
+    format.html
+    format.json { render :json => @dogs }
   end
-</code></pre>                 
-          </section>
+end
+</pre>                 
+</section>
         
-          <section>
-            <h2>Web Behavior != API Behavior</h2>
-            <p><code>respond_to</code> causes confusion by mixing your web application with your API</p>
-          </section>
+<section class="center-slide">
+  <h2>Web != API</h2>
+  <p><code>respond_to</code> causes confusion by mixing your web application with your API</p>
+</section>
 
-          <section>
-            <h2>How can we separate the two?</h2>
-          </section>
+<section class="center-slide">
+  <h2>How can we separate the two?</h2>
+</section>
 
-          <section>
-            <h2>Move API to namespace</h2>
-<pre><code>
-  namespace :api do
-    resources :dogs, :only => [:index]
-  end
-</code></pre> 
-<pre><code>
+<section>
+<h2>Move API to namespace</h2>
+<pre class="prettyprint">
+namespace :api do
+  resources :dogs, :only => [:index]
+end
+</pre> 
+<pre class="prettyprint">
 api_dogs GET /api/dogs(.:format)            api/dogs#index
-</code></pre>           
-<pre><code>
+</pre>           
+<pre class="prettyprint">
 app/
   controllers/
     api/
       dogs_controller.rb
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 class Api::DogsController < ApplicationController
-</code></pre>
-          </section>
+</pre>
+</section>
 
-          <section>
-            <h2>Result</h2>
-            <ul>
-              <li>Moves API to separate classes</li>
-              <li>Moves API to separate files and folder structure</li>
-            </ul>
-          </section>
+<section>
+  <h2>Moves API</h2>
+  <ol class="my-list">
+    <li>...to separate classes</li>
+    <li>...to separate files and folder structure</li>
+  </ol>
+</section>
+</section>
+
+<section>
+  <h2>Routes & HTTP Summary</h2>
+  <ol class="my-list">
+    <li>HTTP Verbs</li>
+    <li>HTTP Status Codes</li>
+    <li>avoid <code>respond_to</code></li>
+    <li>use namespace to separate App & API</li>
+  </ol>
+</section>
+
+
+<section>
+  <h1>Versioning</h1>
+</section>
+
+<section>
+<section>
+  <h2>
+    <strike>I don't need versioning</strike>
+    <br /><br />
+    Oh crap! I need versioning
+  </h2>
+  <p>You need to support legacy API calls</p>
+</section>
+
+<section>
+  <h2>100% of mobile users update their applications on a regular basis</h2>
+  <br />
+  <h1 class="fragment">FACT.</h1>
+</section>
+<section>
+  <h2>So no need to worry about mobile applications calling legacy api endpoints.</h2>
+  <br />
+  <h1 class="fragment">Right?</h1>
+</section>    
+</section>
 
           
-        </section>
+<section>
+<section>
+  <h1>Add version to route</h1>
+</section>
 
-
-        <section>
-          <section>
-            <h1>Versioning</h1>          
-          </section>
-          <section>
-            <h2>
-              <strike>I don't need versioning</strike><br />
-              Oh crap! I need versioning
-            </h2>
-            <br />
-            <br />
-            <h3>You need to support legacy API calls</h3>
-            
-          </section>
-          <section>
-            <h2>100% of mobile users update their applications on a regular basis</h2>
-            <h1 class="fragment">FACT</h1>
-            <h3 class="fragment">So no need to worry about mobile applications calling legacy api endpoints.</h3>
-            <h1 class="fragment">Right?</h1>
-          </section>
-        </section>
-          
-        <section>
-          <section>
-            <h1>Namespacing routes</h1>
-          </section>
-
-          <section>
-            <h2>It's easy but it does affect the url</h2>
-<pre><code>
+<section>     
+  <h2>Use namespace again</h2>
+<pre class="prettyprint">
 namespace :v1 do
   resources :dogs
 end
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 api_v1_dogs GET /api/v1/dogs(.:format)         api/v1/dogs#index
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 app/
   controllers/
     api/
       v1/
         dogs_controller.rb
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 class Api::V1::DogsController < ApplicationController
-</code></pre>
-          </section>
-        </section>
+</pre>
+</section>
+</section>
 
-        <section>
-          <section>
-            <h1>Version in Header</h1>            
-          </section>
-          <section>
-            <a href="http://freelancing-gods.com/posts/versioning_your_ap_is">http://freelancing-gods.com/posts/versioning_your_ap_is</a>
-<pre><code>
+
+<section>
+<section>
+  <h1>Version in Header</h1>            
+</section>
+<section>
+  <a href="http://freelancing-gods.com/posts/versioning_your_ap_is">http://freelancing-gods.com/posts/versioning_your_ap_is</a>
+<pre class="prettyprint">
 namespace :api do
   constrants ApiVersion.new(1) do
     scope :module => :v1 do
@@ -281,11 +351,12 @@ namespace :api do
     end
   end
 end
-</code></pre>
-          </section>
-          <section>
-            <a href="http://freelancing-gods.com/posts/versioning_your_ap_is">http://freelancing-gods.com/posts/versioning_your_ap_is</a>
-<pre><code>
+</pre>
+</section>
+
+<section>
+  <a href="http://freelancing-gods.com/posts/versioning_your_ap_is">http://freelancing-gods.com/posts/versioning_your_ap_is</a>
+<pre class="prettyprint">
 # inside class ApiVersion
 ....
   def matches?(request)
@@ -304,64 +375,79 @@ end
   end
 
 ....
-</code></pre>
-          </section>
-          <section>
-            <h2>Module vs Namespace</h2>
-<h3>We get the same folder structure,</h3>            
-<pre><code>
+</pre>
+</section>
+
+<section>
+  <h2>Module vs Namespace</h2>             
+<p>We get the same folder structure, but doesn't affect the route</p>
+<pre class="prettyprint">
 app/
   controllers/
     api/
       v1/
       v2/
-</code></pre>            
-<h3>but doesn't affect the route</h3>
-          </section>
-        </section>
+</pre> 
+</section>
+</section>
 
-        <section>
-          <section>
-            <h1>Versionist</h1>
-<pre><code>
+
+<section>
+<section>
+  <h1>Versionist</h1>
+<pre class="prettyprint">
 gem install versionist
-</pre></code>
-          </section>
-          <section>
-            <h2>Accept Header</h2>
-            <a href="https://github.com/bploetz/versionist">https://github.com/bploetz/versionist</a>
-<pre><code>
+</pre>
+</section>
+
+<section>
+  <h2>Accept Header</h2>
+  <a href="https://github.com/bploetz/versionist">https://github.com/bploetz/versionist</a>
+<pre class="prettyprint">
 api_version(:module => "V1", :header => "Accept", :value => "application/vnd.mycompany.com; version=1") do
   match '/foos.(:format)' => 'foos#index', :via => :get
   match '/foos_no_format' => 'foos#index', :via => :get
   resources :bars
 end
-</code></pre>                        
-          </section>
-          <section>
-            <h2>Custom Header</h2>
-<pre><code>
+</pre>                        
+</section>
+
+<section>
+<h2>Custom Header</h2>
+<pre class="prettyprint">
 api_version(:module => "V20120317", :header => "API-VERSION", :value => "v20120317") do
   match '/foos.(:format)' => 'foos#index', :via => :get
   match '/foos_no_format' => 'foos#index', :via => :get
   resources :bars
 end
-</code></pre>
-          </section>
-        </section>
+</pre>
+</section>      
+</section>
+
+<section>
+  <h2>Versioning Summary</h2>
+  <ol class="my-list">
+    <li>Version your API</li>
+    <li>Namespace easy but affects url</li>
+    <li>Version in header with modules</li>
+    <li>Versionist gem; looks cool</li>
+  </ol>
+</section>
 
 
-        <section>
-          <h1>JSONification</h1>
-        </section>
 
-        <section>
-          <section>
-            <h2>to_json</h2>
-<pre><code>
+<section>
+  <h1>JSON Serialization</h1>
+</section>
+
+<section>
+<section>
+  <h2>to_json</h2>
+  <p>everything and the kitchen sink</p>
+<pre class="prettyprint">
 @dog.to_json
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 {
   "age": 7, 
   "created_at": "2012-08-05T05:39:30Z", 
@@ -369,44 +455,48 @@ end
   "name": "Penny", 
   "updated_at": "2012-08-05T05:39:30Z"
 }
-</code></pre>            
-          </section>
-          <section>
-            <h2>as_json</h2>
-<pre><code>
+</pre>            
+</section>
+
+<section>
+  <h2>as_json</h2>
+  <p>customizing <code>to_json</code></p>
+<pre class="prettyprint">
 def as_json(options={})
   {
     :id => id,
     :name => name
   }
 end
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 @dog.to_json
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 {
   "id": 1, 
   "name": "Penny"
 }
-</code></pre> 
-          </section>          
-          <section>
-            <h2>Whats wrong with to_json?</h2>                      
-            <h2 class="fragment">Is the data we return for index of resource the same as the show for that resource?</h2>
-          </section>
-          <section>
-            <h2>Probably not.</h2>
+</pre> 
+</section>          
 
-<pre><code>
+<section class="center-slide">
+  <h2>Whats wrong with <code>to_json</code>?</h2>                      
+  <p class="fragment">Is the data we return for index of resource the same as the show for that resource?</p>
+</section>
+
+<section>
+  <h2>Probably not.</h2>
+
+<pre class="prettyprint">
 // dogs#index
 [
   { "id": 1, "name": "Penny" },
   { "id": 2, "name": "Moon" },
   { "id": 3, "name": "Tugboat" },
 ]
-</code></pre> 
-<pre><code>
+</pre> 
+<pre class="prettyprint">
 // dogs#show
 {
   "id": 1, 
@@ -414,257 +504,275 @@ end
   "age": 7,
   "owner": "Suzanne"
 }
-</code></pre>             
-          </section>   
-        </section>
+</pre>             
+</section>   
+</section>
         
-        <section>
-          <h1>Other options?</h1>
-        </section>
+<section class="center-slide">
+  <h2>Other options?</h2>
+</section>
 
-        <section>
-          <section>
-            <h1>boxer</h1>
-<pre><code>
+<section>
+<section>
+  <h1>boxer</h1>
+<pre class="prettyprint">
 gem install boxer
-</code></pre>            
-          </section>      
-          <section>
-            <h2>Configure</h2>
-<pre><code>
+</pre>            
+</section>      
+
+<section>
+  <h2>Configure</h2>
+<pre class="prettyprint">
 /config/initializers/boxer.rb
-</code></pre>   
-<pre><code>
+</pre>   
+<pre class="prettyprint">
 Boxer.box(:dog) do |boxer, dog|
   {
     :name => dog.name,
     :age  => dog.age,
   }
 end
-</code></pre>                  
-          </section>    
-          <section>
-            <h2>Object</h2>
-<pre><code>
+</pre>                  
+</section>    
+
+<section>
+  <h2>Object</h2>
+<pre class="prettyprint">
 def show
   @dog = Dog.find(params[:id])
   render :json => Boxer.ship(:dog, @dog)
 end
-</code></pre> 
+</pre> 
 </section>
+
 <section>
-            <h2>Collection</h2>
-<pre><code>
+  <h2>Collection</h2>
+<pre class="prettyprint">
 def index
   @dogs = Dog.all
   render :json => @dogs.map{|d| Boxer.ship(:dog, d)}
 end
-</code></pre>        
+</pre>        
 </section>     
-          <section>
-            <h2>Easy to setup json format for object</h2>
-            <hr />
-            <h2>Keeps jsonification separate from model definition</h2>            
-          </section>
-        </section>
 
-        <section>
-          <section>
-            <h1>rabl</h1>
-<pre><code>
+<section>
+  <h2>Boxer Summary</h2>
+  <ol class="my-list">
+    <li>Easy to setup json format for object</li>
+    <li>Keeps serialization separate from model definition</li>            
+  </ol>
+</section>
+</section>
+
+<section>
+<section>
+  <h1>rabl</h1>
+<pre class="prettyprint">
 gem install rabl
-</code></pre>                
-          </section>
-        <section>
-            <h2>Object</h2>
-<pre><code>
-  app/controllers/api/dogs_controller.rb
-</pre></code>
-<pre><code>
+</pre>                
+</section>
+
+<section>
+  <h2>Object</h2>
+<pre class="prettyprint">
+app/controllers/api/dogs_controller.rb
+</pre>
+<pre class="prettyprint">
 def show
   @dogs = Dog.find(params[:id])
 end
-</code></pre>
+</pre>
 <hr />
-<pre><code>
-  app/controllers/api/show.rabl
-</pre></code>
-<pre><code>
+<pre class="prettyprint">
+app/controllers/api/show.rabl
+</pre>
+<pre class="prettyprint">
 object @dog
 attributes :id, :name, :age
-</code></pre>
-          </section>        
-          <section>
-            <h2>Collections</h2>
-<pre><code>
-  app/controllers/api/dogs_controller.rb
-</pre></code>
-<pre><code>
+</pre>
+</section>        
+
+<section>
+  <h2>Collections</h2>
+<pre class="prettyprint">
+app/controllers/api/dogs_controller.rb
+</pre>
+<pre class="prettyprint">
 def index
   @dogs = Dog.all
 end
-</code></pre>
+</pre>
 <hr />
-<pre><code>
-  app/views/api/dogs/index.rabl
-</pre></code>
-<pre><code>
+<pre class="prettyprint">
+app/views/api/dogs/index.rabl
+</pre>
+<pre class="prettyprint">
 collection @dogs, :root => "dogs"
 attributes :id, :name, :age
-</code></pre>
-          </section>    
-          <section>
-            <h2>Keeps jsonification separate from model definition</h2> 
-            <hr />
-            <h2>Follows same pattern as normal rails html views</h2>
+</pre>
+</section>    
 
-          </section>
-        </section>
+<section>
+  <h2>Rabl Summary</h2>
+  <ol class="my-list">
+    <li>Keeps serialization separate from model definition</li>            
+    <li>Follows same pattern as normal rails html views</li>    
+  </ol>  
+</section>
+</section>
 
-        <section>
-          <section>
-            <h2>JSONification Problem Summary</h2>
-            <h3>to_json assumes common format of model for all requests</h3>
-            <h3>Muddies models with API concerns</h3>
-          </section>
-          <section>
-            <h2>JSONification Solution Summary</h2>
-            <h3>Serializers / Presenters</h3>
-            <h3>gem <code>boxer</code></h3>
-            <h3>gem <code>rabl</code></h3>
-          </section>          
-        </section>
+
+<section>
+  <h2>JSON Serialization Summary</h2>
+  <ol class="my-list">
+    <li>avoid <code>to_json</code></li>
+    <!-- <li>Serializers / Presenters</h3> -->
+    <li>gem <code>boxer</code></li>
+    <li>gem <code>rabl</code></li>
+  </ol>
+</section>          
           
         
-          <section>
-            <h1>Formatting your response</h1>
-          </section>
-        <section>
-          <section>
-            <h2>root level</h2>
-            <p>You should return a root key to identify what you are returning.</p>
-          </section>
-          <section data-state="alert">
-            <h2>Is this a user?</h2>
-            <pre><code>
-            {
-              name: "Penny",
-              age: 7
-            }
-            </code></pre>
-          </section>
-          <section data-state="soothe">
-            <h2>Oh, its a dog.</h2>
-            <pre><code>
-            { 
-              dog: {
-                name: "Penny",
-                age: 7
-              }
-            }
-            </code></pre>
-          </section>                   
-        </section>
+<section>
+  <h1>JSON Format</h1>
+  <p>how to format responses</p>
+</section>
 
-        <section>
-          <section>
-            <h2>Details</h2>
-            <p>Return more than just the type, code, or id.</p>
-          </section>
-          <section data-state="alert">
-            <h2>WTF is type 3?</h2>
-            <pre><code>
-            { 
-              dog: {
-                name: "Penny",
-                age: 7,
-                type: 3
-              }
-            }
-            </code></pre>            
-          </section>
-          <section data-state="soothe">
-            <h2>Thanks for the info</h2>
-            <pre><code>
-            { 
-              dog: {
-                name: "Penny",
-                age: 7,
-                type: {
-                  id: 3,
-                  name: "Greyhound"
-                }
-              }
-            }
-            </code></pre>            
-          </section>    
-        </section>
-        <section>          
-          <section>
-            <h2>Same for collections</h2>
-            <p>Return more than just the type, code, or id.</p>
-          </section>      
-          <section data-state="alert">
-            <h2>She must be so proud of 3 & 7</h2>
-            <pre><code>
-            { 
-              user: {
-                name: "Suzanne",
-                dogs: [3, 7]
-              }
-            }
-            </code></pre>            
-          </section>
-          <section data-state="soothe">
-            <h2>Much better</h2>
-            <pre><code>
-            { 
-              user: {
-                name: "Suzanne",
-                dogs: [
-                  { id: 3, name: "Penny" }, 
-                  { id: 7, name: "Moon" }
-                ]
-              }
-            }
-            </code></pre>            
-          </section>
-        </section>
+<section>
+<section>
+  <h2>root level</h2>
+  <p>You should return a root key to identify what you are returning.</p>
+</section>
+<section data-state="alert">
+  <h2>Is this a user?</h2>
+<pre class="prettyprint">
+{
+  name: "Penny",
+  age: 7
+}</pre>
+</section>
+<section data-state="soothe">
+  <h2>Oh, its a dog.</h2>
+<pre class="prettyprint">
+{ 
+  dog: {
+    name: "Penny",
+    age: 7
+  }
+}
+</pre>
+</section>                   
+</section>
 
-        <section>
-          <section>
-            <h2>passing urls</h2>
-          </section>          
-          <section>
-            <h2>objective-c string parsing</h2>
-          </section>
-          <section data-state="alert">
-            <h2>What if I want more information on Moon?</h2>
-            <pre><code>
-            { 
-              user: {
-                name: "Suzanne",
-                dogs: [
-                  { id: 3, name: "Penny" }, 
-                  { id: 7, name: "Moon" }
-                ]
-              }
-            }
-            </code></pre>            
-          </section> 
-          <section>            
-            <h2>Steps to getting Moon's information</h2>
-          <ol>
-            <li>Figure out correct url</li>
-            <li>Build the url from the data provided</li>
-            <li>Make http request</li>
-          </ol>
-          <h2 class="fragment">Tedius and Annoying</h2>
-          </section>
+<section>
+<section>
+  <h2>Details</h2>
+  <p>Return more than just the type, code, or id.</p>
+</section>
+
+<section data-state="alert">
+  <h2>WTF is type 3?</h2>
+<pre class="prettyprint">
+{ 
+  dog: {
+    name: "Penny",
+    age: 7,
+    type: 3
+  }
+}
+</pre>            
+</section>
+
+<section data-state="soothe">
+  <h2>Thanks for the info</h2>
+<pre class="prettyprint">
+{ 
+  dog: {
+    name: "Penny",
+    age: 7,
+    type: {
+      id: 3,
+      name: "Greyhound"
+    }
+  }
+}
+</pre>            
+</section>    
+</section>
+
+<section>          
+<section>
+  <h2>Same for collections</h2>
+  <p>Return more than just the type, code, or id.</p>
+</section>     
+
+<section data-state="alert">
+  <h2>She must be so proud of 3 & 7</h2>
+<pre class="prettyprint">
+{ 
+  user: {
+    name: "Suzanne",
+    dogs: [3, 7]
+  }
+}
+</pre>            
+</section>
+
+<section data-state="soothe">
+  <h2>Much better</h2>
+<pre class="prettyprint">
+{ 
+  user: {
+    name: "Suzanne",
+    dogs: [
+      { id: 3, name: "Penny" }, 
+      { id: 7, name: "Moon" }
+    ]
+  }
+}
+</pre>            
+</section>
+</section>
+
+<section>
+<section>
+<h2>passing urls</h2>
+</section>
+
+<section>
+  <h2>objective-c string parsing</h2>
+</section>
+
+<section data-state="alert">
+  <h2>What if I want more information on Moon?</h2>
+<pre class="prettyprint">
+{ 
+  user: {
+    name: "Suzanne",
+    dogs: [
+      { id: 3, name: "Penny" }, 
+      { id: 7, name: "Moon" }
+    ]
+  }
+}
+</pre>            
+</section> 
+
+<section>            
+  <h2>I need to...</h2>
+<ol>
+  <li>Figure out correct url</li>
+  <li>Build the url from the data provided</li>
+  <li>Make http request</li>
+</ol>
+<br />
+<br />
+<h2 class="fragment subsection">Tedius and Annoying</h2>
+</section>
           
-          <section data-state="soothe">
+<section data-state="soothe">
 <h2>No more string parsing!</h2>
-<pre><code>{ 
+<pre class="prettyprint">{ 
   user: {
     name: "Suzanne",
     dogs: [
@@ -679,23 +787,36 @@ attributes :id, :name, :age
       } 
     ]
   }
-}</code></pre>            
-          </section>     
-          <section>
-            <h2>Bonus!</h2>
-            <p>does the user of this api who navigates using the url given actually care about the url contents?</p>
-            <p>so we can change the url to that resource and mobile apps won't care</p>
-          </section>
-        </section>
+}</pre>            
+</section>  
 
-        <section>
-          <h1>Authentication</h1>
-        </section>
+<section>
+  <h2>Bonus!</h2>
+  <ol class="my-list">
+    <li>Does the user using the url care about the routes?</li>
+    <li>So we can change the url and mobile apps won't care.</li>
+  </ol>
+</section>
+</section>
 
-        <section>
-          <section>
-            <h2>HTTP Basic</h2>
-<pre><code>
+<section>
+  <h2>JSON Format Summary</h2>
+  <ol class="my-list">
+    <li>always have root key</li>
+    <li>show details not just ids</li>
+    <li>pass urls</li>
+  </ol>
+</section> 
+
+
+<section>
+  <h1>Authentication</h1>
+</section>
+
+
+<section>
+  <h2>HTTP Basic</h2>
+<pre class="prettyprint">
 class Api::HttpBasic::BaseController < ApplicationController
   before_filter :authenticate
 
@@ -707,37 +828,23 @@ class Api::HttpBasic::BaseController < ApplicationController
     end
   end
 end
-</code></pre>            
-          </section>
-          <section>
-            <h2>Easy, peasy</h2>
-<pre><code>
+</pre>            
+</section>
 
-context "with authentication" do
-  before(:each) do
-    auth = ActionController::HttpAuthentication::Basic.encode_credentials "api_user", "super_easy"        
-    get api_http_basic_dogs_path, {}, 'HTTP_AUTHORIZATION' => auth
-  end
-  it "should return 200 status code" do
-    response.code.should == "200"
-  end
-end
 
-</code></pre>            
-        </section>
-      </section>
 
-        <section>
-          <section>
-            <h1>API Token</h1>
-          </section>
-          <section>
-            <h2>Rolling your own</h2>
-            <a href="http://railscasts.com/episodes/352-securing-an-api?view=asciicast">http://railscasts.com/episodes/352-securing-an-api?view=asciicast</a>
-          </section>
-          <section>
-            <h2>ApiKey</h2>
-<pre><code>
+<section>
+<section>
+  <h1>API Token</h1>
+</section>
+<section>
+  <h1>Rolling your own</h1>
+  <a href="http://railscasts.com/episodes/352-securing-an-api?view=asciicast">http://railscasts.com/episodes/352-securing-an-api?view=asciicast</a>
+</section>
+
+<section>
+  <h2>Api Key</h2>
+<pre class="prettyprint">
 class ApiKey < ActiveRecord::Base
   before_create :generate_api_token
   
@@ -747,12 +854,13 @@ class ApiKey < ActiveRecord::Base
     self.api_token = SecureRandom.hex
   end
 end
-</code></pre> 
-<pre><code>SecureRandom.hex -> c8fd0259715241cd1ad1f7640022258c</code></pre>
-          </section>
-          <section>
-            <h2>Checking Token via param</h2>
-<pre><code>
+</pre> 
+<pre class="prettyprint">SecureRandom.hex -> c8fd0259715241cd1ad1f7640022258c</pre>
+</section>
+
+<section>
+  <h2>Checking Token via param</h2>
+<pre class="prettyprint">
   before_filter :check_token
 
   protected
@@ -761,12 +869,13 @@ end
     api_token = ApiKey.find_by_api_token(params[:api_token])
     head :unauthorized unless api_token    
   end
-</code></pre>            
-          </section>        
-
-          <section>
-            <h2>Checking Token via header</h2>
-<pre><code>
+</pre>            
+<p>This method means the token is passed with the url.</p>
+</section>  
+      
+<section>
+  <h2>Checking Token via header</h2>
+<pre class="prettyprint">
   before_filter :check_token
 
   protected
@@ -776,64 +885,118 @@ end
       ApiKey.exists?(:api_token => token)
     end
   end
-</code></pre>            
-          </section>
+</pre>   
+<p>This method means the token is NOT passed with the url.</p>         
+</section>
 
-        </section>
+</section>
 
-        <section>
-          <section>
-            <h1>Devise</h1>
-          </section>  
-          <section>
-<h2>Token Authenticable</h2>
-<pre><code>
-
+<section>
+<section>
+  <h1>Devise</h1>
+</section>  
+          
+<section>
+  <h2>Token Authenticable</h2>
+<pre class="prettyprint">
 devise :database_authenticatable, :registerable,
        :recoverable, :rememberable, :trackable, :validatable,
        :token_authenticatable
-
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 # be sure to add column
 t.string :authentication_token
-</code></pre>
-<pre><code>
+</pre>
+<pre class="prettyprint">
 # User model
 before_save :ensure_authentication_token 
-</code></pre>
-          </section>
-          <section>
-            <h2>Passing token in request</h2>
-<pre><code>
+</pre>
+</section>
+
+<section>
+  <h2>Pass token with request</h2>
+<pre class="prettyprint">
 # first request
 get api_devise_token_dogs_path(:auth_token => @user.authentication_token)
-</code></pre>            
-<h2>No need to pass token with next request</h2>
-<pre><code>
+</pre>    
+<div class="subsection">        
+<p>No need to pass token with next request</p>
+<pre class="prettyprint">
 #second request
 get api_devise_token_dogs_path
-</code></pre>
-          </section>
+</pre>
+</div>
+</section>
 
-        </section>        
+</section>        
 
-        <section>
-          <h2>Authentication Summary</h2>
-          <ul>
-            <li>HTTP Basic</li>
-            <li>Custom Token</li>
-            <li>Devise</li>
-          </ul>
-        </section>
+<section>
+  <h2>Authentication Summary</h2>
+  <ol class="my-list">
+    <li>HTTP Basic</li>
+    <li>Custom Token</li>
+    <li>Devise</li>
+  </ol>
+</section>
 
-        <section>
-          <h1>Review</h1>
-        </section>
+<section>
+<section>
+  <h1>Let's Review</h1>
+</section>
 
-        <section>
-          <h1>Questions?</h1>          
-        </section>
+<section>
+  <h2>Routes & HTTP Summary</h2>
+  <ol class="my-list">
+    <li>HTTP Verbs</li>
+    <li>HTTP Status Codes</li>
+    <li>avoid <code>respond_to</code></li>
+    <li>use namespace to separate App & API</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Versioning Summary</h2>
+  <ol class="my-list">
+    <li>Version your API</li>
+    <li>Namespace easy but affects url</li>
+    <li>Version in header with modules</li>
+    <li>Versionist gem; looks cool</li>
+  </ol>
+</section>
+
+<section>
+  <h2>JSON Serialization Summary</h2>
+  <ol class="my-list">
+    <li>avoid <code>to_json</code></li>
+    <!-- <li>Serializers / Presenters</h3> -->
+    <li>gem <code>boxer</code></li>
+    <li>gem <code>rabl</code></li>
+  </ol>
+</section>  
+
+<section>
+  <h2>JSON Format Summary</h2>
+  <ol class="my-list">
+    <li>always have root key</li>
+    <li>show details not just ids</li>
+    <li>pass urls</li>
+  </ol>
+</section> 
+
+<section>
+  <h2>Authentication Summary</h2>
+  <ol class="my-list">
+    <li>HTTP Basic</li>
+    <li>Custom Token</li>
+    <li>Devise</li>
+  </ol>
+</section>
+</section>
+
+<section>
+  <h1>Questions?</h1>          
+</section>
+        
       </div>
 
       <!-- The navigational controls UI -->
@@ -902,9 +1065,13 @@ get api_devise_token_dogs_path
       }]));
       
       // Load highlight.js for syntax highlighting of code samples
-      head.js( 'lib/js/highlight.js', function() { 
-        hljs.initHighlightingOnLoad(); 
-      } );
+      // head.js( 'lib/js/highlight.js', function() { 
+      //   hljs.initHighlightingOnLoad(); 
+      // } );
+head.js('lib/prettify/prettify.js', function() {
+  console.log("test");
+  prettyPrint();
+});
     </script>
 
   </body>

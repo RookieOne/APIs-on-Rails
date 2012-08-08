@@ -20,6 +20,9 @@ body ol.my-list li {
 .center-slide {
   margin-top: 180px;
 }
+pre.prettyprint {
+  padding: 16px;
+}
 
 
 /**
