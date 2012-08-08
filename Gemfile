@@ -4,7 +4,6 @@ gem 'rails', '3.2.3'
 gem 'sqlite3'
 gem "boxer"
 gem "rabl"
-gem "uuidtools"
 gem "devise"
 
 # Gems used only for assets and not required

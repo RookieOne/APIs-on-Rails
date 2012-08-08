@@ -7,7 +7,6 @@ describe "API" do
         3.times { FactoryGirl.create(:dog) }
         get api_v1_rabl_dogs_path
         @result = JSON.parse(response.body)
-        p @result
       end
       it "should return dogs" do
         @result["dogs"].count.should == 3

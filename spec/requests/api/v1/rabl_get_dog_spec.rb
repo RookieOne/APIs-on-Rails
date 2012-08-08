@@ -7,7 +7,6 @@ describe "API" do
         @dog = FactoryGirl.create(:dog)
         get api_v1_rabl_dog_path(@dog)
         @result = JSON.parse(response.body)
-        p @result
       end
       it "should return dogs" do
         @result["dog"]["id"].should == @dog.id
