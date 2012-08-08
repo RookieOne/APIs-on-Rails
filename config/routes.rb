@@ -1,5 +1,7 @@
 RailsApi::Application.routes.draw do
 
+  resources :dogs
+
 
   namespace :api do
     resources :dogs, :only => [:index]
@@ -7,6 +9,7 @@ RailsApi::Application.routes.draw do
     namespace :v1 do
       resources :dogs, :only => [:index]
       resources :boxer_dogs, :only => [:index]
+      resources :rabl_dogs, :only => [:index, :show]
     end
 
     # namespace :v2 do
@@ -15,9 +18,13 @@ RailsApi::Application.routes.draw do
     namespace :http_basic do
       resources :dogs, :only => [:index]
     end
+
+    namespace :token do
+      resources :dogs, :only => [:index]
+    end
   end
 
-  resources :dogs, :only => [:index]
+  # resources :dogs, :only => [:index]
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
