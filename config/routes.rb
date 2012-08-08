@@ -1,5 +1,7 @@
 RailsApi::Application.routes.draw do
 
+  devise_for :users
+
   resources :dogs
 
 
@@ -12,14 +14,16 @@ RailsApi::Application.routes.draw do
       resources :rabl_dogs, :only => [:index, :show]
     end
 
-    # namespace :v2 do
-      
-    # end
     namespace :http_basic do
       resources :dogs, :only => [:index]
     end
 
     namespace :token do
+      resources :in_params_dogs, :only => [:index]
+      resources :in_header_dogs, :only => [:index]
+    end
+
+    namespace :devise_token do
       resources :dogs, :only => [:index]
     end
   end
