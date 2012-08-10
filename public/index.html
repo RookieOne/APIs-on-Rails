@@ -76,7 +76,7 @@
           <section>
             <h2>We will talk about...</h2> 
             <ol class="my-list">
-              <li class="fragment">Routes & HTTP</li>
+              <li class="fragment">HTTP & Routes</li>
               <li class="fragment">Versioning</li>
               <li class="fragment">JSON Serialization</li>
               <li class="fragment">JSON Format</li>
@@ -88,7 +88,7 @@
             <ol class="my-list">
               <li class="fragment">What is REST</li>
               <li class="fragment">What isn't REST</li>
-              <li class="fragment">Chic-fil-a</li>
+              <li class="fragment">Chick-fil-A</li>
               <li class="fragment">Avengers vs Batman</li>
               <li class="fragment">Who is the best Doctor</li>              
             </ol>
@@ -110,6 +110,10 @@
             <h1>Experience</h1>
             <p>aka... what do I know</p>  
           </section>
+          <section class="center-slide">
+            <h2>6 yrs > 3 yrs</h2>          
+            <h3>desktop &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  web</h3>
+          </section>          
           <section class="center-slide">
             <h2>I've consumed APIs</h2>
             <p>On desktop apps, server-side code, and on mobile devices</p>
@@ -139,7 +143,7 @@
 </section>
 <section class="center-slide">
   <h2>Experienced Devs</h2>          
-  <p>I learned a few things working on this talk, maybe you will too.</p>
+  <p>I learned a few things working on this talk. Maybe you will too.</p>
 </section>
 <section class="center-slide">
   <h2>Experts?</h2>          
@@ -152,7 +156,7 @@
 </section>
 
 <section class="center-slide">
-  <h1>Routes & HTTP</h1>
+  <h1>HTTP & Routes</h1>
   <p>It's important</p>
 </section>
 
@@ -161,12 +165,12 @@
   <h2>HTTP Verbs</h2>
   <p>Simply...</p>
   <p class="subsection"><code>GET</code>  - read</p>
-  <p class="subsection"><code>POST</code> - write</p>
+  <p class="subsection"><code>POST</code>,<code>PUT</code>,<code>DELETE</code> - everything else</p>
   <p class="subsection">It is more complicated than that, but...</p>
 </section>
 <section data-state="alert">
   <h2>When you get that wrong</h2>
-  <p>You look terrible and it pisses experience API users off immensely</p>
+  <p>You look terrible, and it pisses experienced API users off immensely</p>
 <pre class="prettyprint">// to login
 GET "http://wtf.com/api/login"
 </pre>
@@ -204,10 +208,25 @@ edit_dog GET    /dogs/:id/edit(.:format)        dogs#edit
     <li>many more...</li>
   </ol>  
 </section>
+<section>
+  <h2>200 - everything worked!</h2>
+<pre class="prettyprint">
+{
+  success: false,
+  errors: [
+    { message: "Ha ha! Fooled you!"}
+  ]
+}
+</pre>   
+</section>
+<section class="center-slide">
+  <h1>Check out</h1>
+  <a href="http://httpstatus.es/">http://httpstatus.es/</a>
+  <p class="fragment">Thanks Ben!</p>
+</section>
 </section>
 
 <section>
-
 <section>
 <h2>respond_to</h2>    
 <pre class="prettyprint">def index
@@ -289,6 +308,7 @@ class Api::DogsController < ApplicationController
   <h2>100% of mobile users update their applications on a regular basis</h2>
   <br />
   <h1 class="fragment">FACT.</h1>
+  <h3 class="fragment">* not a fact.</h3>
 </section>
 <section>
   <h2>So no need to worry about mobile applications calling legacy api endpoints.</h2>
@@ -324,8 +344,10 @@ app/
 class Api::V1::DogsController < ApplicationController
 </pre>
 </section>
+<section class="center-slide">
+  <h1>OMG the url!!</h1>
 </section>
-
+</section>
 
 <section>
 <section>
@@ -389,6 +411,10 @@ app/
       v2/
 </pre> 
 </section>
+<section class="center-slide">
+  <h2>The url is saved.</h2>
+  <p>We can breath again.</p>
+</section>
 </section>
 
 
@@ -421,7 +447,11 @@ api_version(:module => "V20120317", :header => "API-VERSION", :value => "v201203
   resources :bars
 end
 </pre>
-</section>      
+</section> 
+<section class="center-slide">
+  <h2>Pretty cool, right?</h2>  
+</section>
+
 </section>
 
 <section>
@@ -558,7 +588,7 @@ end
 <section>
   <h2>Boxer Summary</h2>
   <ol class="my-list">
-    <li>Easy to setup json format for object</li>
+    <li>Easy to set up json format for object</li>
     <li>Keeps serialization separate from model definition</li>            
   </ol>
 </section>
@@ -621,6 +651,11 @@ attributes :id, :name, :age
 </section>
 </section>
 
+<section class="center-slide">
+  <h2>boxer vs rabl</h2>
+  <p>* results my vary</p>
+</section>
+
 
 <section>
   <h2>JSON Serialization Summary</h2>
@@ -661,7 +696,20 @@ attributes :id, :name, :age
   }
 }
 </pre>
-</section>                   
+</section> 
+<section>
+<h2><code>to_json</code></h2>
+<pre class="prettyprint">
+ActiveResource::Base.include_root_in_json = true
+</pre>
+<br />
+<h2>rabl</h2>
+<p>Turned on by default</p>                  
+<br />
+<h2>boxer</h2>
+<pre class="prettyprint">render :json => { :dogs => @dogs.map{|d| Boxer.ship(:dog, d)} }
+</pre>                  
+</section>
 </section>
 
 <section>
@@ -735,12 +783,14 @@ attributes :id, :name, :age
 </section>
 
 <section>
-<section>
+<section class="center-slide">
 <h2>passing urls</h2>
+<p>it's about kindness</p>
 </section>
 
-<section>
+<section class="center-slide">
   <h2>objective-c string parsing</h2>
+  <p>Didn't get my example.. just imagine lots of <br/><br /> [uglyCode andPityTheProgrammer]</p>
 </section>
 
 <section data-state="alert">
@@ -767,7 +817,10 @@ attributes :id, :name, :age
 </ol>
 <br />
 <br />
-<h2 class="fragment subsection">Tedius and Annoying</h2>
+<p class="fragment">And think about testing against dev, staging, and production endpoints</p>
+<br />
+<br />
+<h2 class="fragment subsection">Tedious and Annoying</h2>
 </section>
           
 <section data-state="soothe">
@@ -794,8 +847,13 @@ attributes :id, :name, :age
   <h2>Bonus!</h2>
   <ol class="my-list">
     <li>Does the user using the url care about the routes?</li>
-    <li>So we can change the url and mobile apps won't care.</li>
+    <li>So we can change the url, and mobile apps won't care.</li>
   </ol>
+</section>
+<section class="center-slide">
+  <h2>HATEOAS</h2>
+  <h2 class="fragment">Hypermedia</h2>
+  <p class="fragment">All things I won't be talking about now</p>
 </section>
 </section>
 
@@ -940,7 +998,7 @@ get api_devise_token_dogs_path
 </section>
 
 <section>
-<section>
+<section class="center-slide">
   <h1>Let's Review</h1>
 </section>
 
@@ -994,9 +1052,15 @@ get api_devise_token_dogs_path
 </section>
 
 <section>
+<section class="center-slide">
+  <h1>Slides</h1>  
+  <a href="https://github.com/RookieOne/APIs-on-Rails">https://github.com/RookieOne/APIs-on-Rails</a>        
+</section>
+<section class="center-slide">
   <h1>Questions?</h1>          
 </section>
-        
+</section>
+
       </div>
 
       <!-- The navigational controls UI -->

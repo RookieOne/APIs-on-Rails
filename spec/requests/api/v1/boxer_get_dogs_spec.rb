@@ -6,7 +6,7 @@ describe "API" do
       before(:each) do
         3.times { FactoryGirl.create(:dog) }
         get api_v1_boxer_dogs_path
-        @dogs = JSON.parse(response.body)
+        @dogs = JSON.parse(response.body)["dogs"]
       end
       it "should return dogs" do
         @dogs.count.should == 3
